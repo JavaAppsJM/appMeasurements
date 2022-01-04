@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="be.hvwebsites.metingen.MainActivity">
+
+    <item
+        android:id="@+id/menu_instellingen"
+        android:title="@string/instellingen" />
+
+    <item
+        android:id="@+id/menu_beheer_locaties"
+        android:title="Beheer Locaties" />
+
+    <item
+        android:id="@+id/menu_beheer_meters"
+        android:title="Beheer Meters" />
+
+    <item
+        android:id="@+id/menu_beheer_nutsbedrijven"
+        android:title="Beheer Nutsbedrijven" />
+
+    <item
+        android:id="@+id/menu_beheer_kosten"
+        android:title="Beheer Kosten" />
+
+
+</menu>

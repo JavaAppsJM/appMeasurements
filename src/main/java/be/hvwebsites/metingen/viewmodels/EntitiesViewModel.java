@@ -228,6 +228,24 @@ public class EntitiesViewModel extends AndroidViewModel {
         return mDisplayList;
     }
 
+    public Measurement getMsrmntById(IDNumber locationId){
+        for (int j = 0; j < measurementList.size(); j++) {
+            if (locationList.get(j).getEntityId().getId() == locationId.getId()){
+                return measurementList.get(j);
+            }
+        }
+        return null;
+    }
+
+    public int getMsrmntIndexById(IDNumber locationId){
+        for (int j = 0; j < measurementList.size(); j++) {
+            if (locationList.get(j).getEntityId().getId() == locationId.getId()){
+                return j;
+            }
+        }
+        return StaticData.ITEM_NOT_FOUND;
+    }
+
     private List<Measurement> getMeasurementsFromDataList(List<String> dataList){
         // Converteert een datalist met metingen in een measurementlist
         List<Measurement> measurements = new ArrayList<>();
@@ -338,6 +356,42 @@ public class EntitiesViewModel extends AndroidViewModel {
 
         // Bewaar nieuwe toestand meters
         storeMeters();
+        return returnInfo;
+    }
+
+    public ReturnInfo storeMeasurements(){
+        // Bewaart de measurementlist
+        ReturnInfo returnInfo = new ReturnInfo(0);
+        repository.storeData(measurementFile, convertMsrmntListinDataList(measurementList));
+        return returnInfo;
+    }
+
+    private List<String> convertMsrmntListinDataList(List<Measurement> inList){
+        // Converteert een measurementlist in een datalist voor bewaard te worden in een bestand
+        List<String> lineList = new ArrayList<>();
+        for (int i = 0; i < inList.size(); i++) {
+            lineList.add(inList.get(i).convertToFileLine());
+        }
+        return lineList;
+    }
+
+    public void deleteMsrmntByID(IDNumber inIDNumber){
+        for (int i = 0; i < measurementList.size(); i++) {
+            if (measurementList.get(i).getEntityId().getId() ==
+                    inIDNumber.getId()){
+                deleteMsrmnt(i);
+            }
+        }
+    }
+
+    private ReturnInfo deleteMsrmnt(int position){
+        // Verwijdert een meter
+        ReturnInfo returnInfo = new ReturnInfo(0);
+        measurementList.remove(position);
+        // Alle relevante items moeten voor die measurement ook verwijderd worden
+
+        // Bewaar nieuwe toestand meters
+        storeMeasurements();
         return returnInfo;
     }
 

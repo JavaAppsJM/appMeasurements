@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/header_msrmnt_list"
         tools:ignore="MissingConstraints"
         tools:listitem="@layout/list_measurement_item" />
 
@@ -61,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/spinner_location" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/header_msrmnt_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

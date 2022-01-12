@@ -7,6 +7,8 @@ import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.Calendar;
 
@@ -37,13 +39,22 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         // Create a new instance of DatePickerDialog and return it.
+        FragmentActivity test = getActivity();
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        // Geef resultaat aan de calling activity
-        NewDatePickerInterface callingActivity = (NewDatePickerInterface) getActivity();
-        callingActivity.processDatePickerResult(year, month, day);
+        // Geef resultaat aan de calling activity fragment
+        FragmentActivity test = getActivity();
+        Fragment test4 = getParentFragment();
+        Fragment test5 = getParentFragmentManager().getPrimaryNavigationFragment();
+        Fragment test6 = getChildFragmentManager().getPrimaryNavigationFragment();
+        Fragment test7 = getActivity().getSupportFragmentManager().getPrimaryNavigationFragment();
+//        String test8 = getActivity().getCallingActivity().flattenToString();
+
+
+        NewDatePickerInterface callingActivityFragment = (NewDatePickerInterface) getActivity();
+        callingActivityFragment.processDatePickerResult(year, month, day);
 
     }
 }

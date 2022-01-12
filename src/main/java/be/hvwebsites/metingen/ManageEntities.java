@@ -58,7 +58,7 @@ public class ManageEntities extends AppCompatActivity {
                 Intent manIntent = new Intent(ManageEntities.this, EditEntity.class);
                 manIntent.putExtra(SpecificData.ENTITY_TYPE, entityType);
                 manIntent.putExtra(StaticData.EXTRA_INTENT_KEY_ACTION, StaticData.ACTION_NEW);
-                manIntent.putExtra(StaticData.EXTRA_INTENT_KEY_SELECTION, locationSelection);
+                manIntent.putExtra(SpecificData.LOCATION_SPIN, locationSelection);
                 startActivity(manIntent);
             }
         });

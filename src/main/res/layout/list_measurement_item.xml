@@ -6,10 +6,12 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/measurement_item"
-        android:layout_width="363dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="10dp"
+        android:id="@+id/msrmnt_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:fontFamily="@font/courier_prime"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="31/12/2021  999999,99  99999,99  999,99  999" />
 

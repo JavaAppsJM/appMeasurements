@@ -6,19 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".fragments.MeasurementListFragment">
+    tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_measurements"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="12dp"
+        android:layout_margin="8dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_msrmnt_list"
-        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@+id/msrmnt_date_header"
         tools:listitem="@layout/list_measurement_item" />
 
     <TextView
@@ -60,6 +59,7 @@
         app:layout_constraintStart_toEndOf="@+id/label_location"
         app:layout_constraintTop_toBottomOf="@+id/spinner_location" />
 
+<!--
     <TextView
         android:id="@+id/header_msrmnt_list"
         android:layout_width="wrap_content"
@@ -69,6 +69,63 @@
         android:text="@string/label_measurementlist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_new_msrmnt" />
+-->
+
+    <TextView
+        android:id="@+id/msrmnt_date_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="monospace"
+        android:text="@string/datumLabel"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_new_msrmnt" />
+
+    <TextView
+        android:id="@+id/msrmnt_meterstand_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:fontFamily="monospace"
+        android:text="@string/meterstandLabel"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/msrmnt_date_header"
+        app:layout_constraintStart_toEndOf="@+id/msrmnt_date_header" />
+
+    <TextView
+        android:id="@+id/msrmnt_verbruik_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="monospace"
+        android:text="@string/verbruikLabel"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/msrmnt_date_header"
+        app:layout_constraintStart_toEndOf="@+id/msrmnt_meterstand_header" />
+
+    <TextView
+        android:id="@+id/msrmnt_dagverbruik_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="monospace"
+        android:text="@string/dagverbruikLabel"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/msrmnt_date_header"
+        app:layout_constraintStart_toEndOf="@+id/msrmnt_verbruik_header" />
+
+    <TextView
+        android:id="@+id/msrmnt_periode_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="monospace"
+        android:text="@string/periodeLabel"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/msrmnt_date_header"
+        app:layout_constraintStart_toEndOf="@+id/msrmnt_dagverbruik_header" />
 
     <Button
         android:id="@+id/button_new_msrmnt"

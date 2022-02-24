@@ -2,6 +2,7 @@ package be.hvwebsites.metingen.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,14 @@ import be.hvwebsites.libraryandroid4.helpers.IDNumber;
 import be.hvwebsites.libraryandroid4.helpers.ListItemHelper;
 import be.hvwebsites.libraryandroid4.statics.StaticData;
 import be.hvwebsites.metingen.EditEntity;
+import be.hvwebsites.metingen.EditMeasurement;
 import be.hvwebsites.metingen.R;
 import be.hvwebsites.metingen.constants.SpecificData;
+import be.hvwebsites.metingen.entities.Measurement;
 
 public class TextItemListAdapter extends RecyclerView.Adapter<TextItemListAdapter.ListViewHolder> {
     private final LayoutInflater inflater;
     private Context mContext;
-
-//    private List<String> reusableList;
     private List<ListItemHelper> itemList;
     private String entityType;
 
@@ -37,7 +38,12 @@ public class TextItemListAdapter extends RecyclerView.Adapter<TextItemListAdapte
 
         private ListViewHolder(View itemView){
             super(itemView);
-            textItemView = itemView.findViewById(R.id.manage_entities_item);
+
+            if (entityType.equals(SpecificData.ENTITY_TYPE_3)){
+                textItemView = itemView.findViewById(R.id.msrmnt_item);
+            }else {
+                textItemView = itemView.findViewById(R.id.manage_entities_item);
+            }
 
             itemView.setOnClickListener(this);
         }
@@ -51,7 +57,14 @@ public class TextItemListAdapter extends RecyclerView.Adapter<TextItemListAdapte
             IDNumber itemIDToUpdate = itemList.get(positionToUpdate).getItemID();
 //            String currentItem = itemList.get(positionToUpdate).getItemtext();
 
-            Intent intent = new Intent(mContext, EditEntity.class);
+            Intent intent;
+
+            if (entityType == SpecificData.ENTITY_TYPE_3){
+                intent = new Intent(mContext, EditMeasurement.class);
+            }else {
+                intent = new Intent(mContext, EditEntity.class);
+            }
+
             intent.putExtra(SpecificData.ENTITY_TYPE, entityType);
             intent.putExtra(StaticData.EXTRA_INTENT_KEY_ACTION, StaticData.ACTION_UPDATE);
             intent.putExtra(StaticData.EXTRA_INTENT_KEY_SELECTION, "currentItem");
@@ -89,23 +102,26 @@ public class TextItemListAdapter extends RecyclerView.Adapter<TextItemListAdapte
     @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.list_manage_entities_item, parent, false);
+        View itemView;
+
+        if (entityType.equals(SpecificData.ENTITY_TYPE_3)){
+            itemView = inflater.inflate(R.layout.list_measurement_item, parent, false);
+        }else {
+            itemView = inflater.inflate(R.layout.list_manage_entities_item, parent, false);
+        }
         return new ListViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-//        if (reusableList != null){
-//            String currentLine = reusableList.get(position);
-//            holder.textItemView.setText(currentLine);
-//        }else {
-//            holder.textItemView.setText("No data !");
-//        }
         if (itemList != null){
             String currentLine = itemList.get(position).getItemtext();
             holder.textItemView.setText(currentLine);
         }else {
             holder.textItemView.setText("No data !");
+        }
+        if (entityType.equals(SpecificData.ENTITY_TYPE_3)){
+            holder.textItemView.setTypeface(Typeface.MONOSPACE);
         }
     }
 

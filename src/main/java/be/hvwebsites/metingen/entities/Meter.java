@@ -120,7 +120,7 @@ public class Meter {
     }
 
     public void setEntityName(String entityName) {
-        this.entityName = entityName;
+        this.entityName = entityName.substring(0,1).toUpperCase().concat(entityName.substring(1));
     }
 
     public IDNumber getMeterLocationId() {

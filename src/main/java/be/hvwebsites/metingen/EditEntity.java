@@ -2,26 +2,21 @@ package be.hvwebsites.metingen;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import be.hvwebsites.libraryandroid4.returninfo.ReturnInfo;
 import be.hvwebsites.libraryandroid4.statics.StaticData;
 import be.hvwebsites.metingen.constants.SpecificData;
-import be.hvwebsites.metingen.fragments.DatePickerFragment;
 import be.hvwebsites.metingen.fragments.LocationEditFragment;
-import be.hvwebsites.metingen.fragments.MeasurementEditFragment;
 import be.hvwebsites.metingen.fragments.MeterEditFragment;
 import be.hvwebsites.metingen.viewmodels.EntitiesViewModel;
 
-public class EditEntity extends AppCompatActivity implements NewDatePickerInterface{
+public class EditEntity extends AppCompatActivity {
     private EntitiesViewModel viewModel;
     private TextView instruction;
     private String entityType = "";
@@ -118,50 +113,6 @@ public class EditEntity extends AppCompatActivity implements NewDatePickerInterf
                             .commit();
                 }
                 break;
-            case SpecificData.ENTITY_TYPE_3:
-                // TODO: edit measurement uitwerken
-                fragmentBundle.putString(SpecificData.LOCATION_SPIN, locationSelection);
-                fragmentBundle.putString(SpecificData.METER_SPIN, meterSelection);
-                if (action.equals(StaticData.ACTION_NEW)) {
-                    setTitle(SpecificData.TITLE_NEW_ACTIVITY_T3);
-                    instruction.setText(StaticData.INSTRUCTION_ACTION_NEW);
-                } else {
-                    setTitle(SpecificData.TITLE_UPDATE_ACTIVITY_T3);
-                    instruction.setText(StaticData.INSTRUCTION_ACTION_UPDATE);
-                    // Index uit intent halen om te weten welk element moet aangepast worden
-                    idToUpdate = editIntent.getIntExtra(StaticData.EXTRA_INTENT_KEY_ID,
-                            StaticData.ITEM_NOT_FOUND);
-                    // in bundle steken om mee te geven aan fragment
-                    fragmentBundle.putInt(StaticData.EXTRA_INTENT_KEY_ID, idToUpdate);
-                }
-                // Creeer fragment_measurements
-                if (savedInstanceState == null) {
-                    getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .add(R.id.fragmentEntity, MeasurementEditFragment.class, fragmentBundle)
-                            .commit();
-                }
-        break;
         }
-    }
-
-    @Override
-    public void showDatePicker(View view) {
-
-    }
-
-    @Override
-    public void processDatePickerResult(int year, int month, int day) {
-        // Verwerkt de gekozen datum uit de picker
-        String month_string = Integer.toString(month+1);
-        String day_string = Integer.toString(day);
-        String year_string = Integer.toString(year);
-        String dateMessage = (day_string +
-                "/" + month_string + "/" + year_string);
-
-        //dateView.setText(dateMessage);
-
-        Toast.makeText(this, "Date: " + dateMessage, Toast.LENGTH_SHORT).show();
-
     }
 }

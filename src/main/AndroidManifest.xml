@@ -10,12 +10,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Metingen">
-
+        <activity
+            android:name=".EditMeasurement"
+            android:label="@string/title_activity_edit_entity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="be.hvwebsites.metingen.MainActivity" />
+        </activity>
         <activity
             android:name=".EditEntity"
             android:label="@string/title_activity_edit_entity"
-            android:parentActivityName=".ManageEntities"
-            tools:ignore="Instantiatable">
+            android:parentActivityName=".ManageEntities">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.hvwebsites.metingen.ManageEntities" />
@@ -37,6 +43,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

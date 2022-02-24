@@ -1,94 +1,108 @@
-package be.hvwebsites.metingen.fragments;
+package be.hvwebsites.metingen;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
-
 import be.hvwebsites.libraryandroid4.helpers.DateString;
 import be.hvwebsites.libraryandroid4.helpers.IDNumber;
+import be.hvwebsites.libraryandroid4.returninfo.ReturnInfo;
 import be.hvwebsites.libraryandroid4.statics.StaticData;
-import be.hvwebsites.metingen.MainActivity;
-import be.hvwebsites.metingen.ManageEntities;
-import be.hvwebsites.metingen.NewDatePickerInterface;
-import be.hvwebsites.metingen.R;
 import be.hvwebsites.metingen.constants.SpecificData;
 import be.hvwebsites.metingen.entities.Location;
 import be.hvwebsites.metingen.entities.Measurement;
+import be.hvwebsites.metingen.entities.Meter;
+import be.hvwebsites.metingen.fragments.DatePickerFragment;
 import be.hvwebsites.metingen.viewmodels.EntitiesViewModel;
 
-public class MeasurementEditFragment extends Fragment implements NewDatePickerInterface {
+public class EditMeasurement extends AppCompatActivity implements NewDatePickerInterface{
     private EntitiesViewModel viewModel;
-    private int iDToUpdate = StaticData.ITEM_NOT_FOUND;
-    private Measurement msrmntToUpdate;
+    private TextView instruction;
+    private String entityType = "";
+    private String action = "";
     private String locationSelection = "";
     private String meterSelection = "";
+    private int iDToUpdate = StaticData.ITEM_NOT_FOUND;
+    private Measurement msrmntToUpdate;
+    private EditText dateView;
+    private TextView labelValue1View;
+    private EditText value1View;
+    private TextView labelValue2View;
     private TextView locationValueView;
     private TextView meterValueView;
-    private EditText dateView;
     private EditText meterstandView;
 
 
-    // Toegevoegd vanuit android tutorial
-    public MeasurementEditFragment(){
-        super(R.layout.fragment_measurement_edit);
-    }
-
-    private FragmentManager getSupportFragmentManager() {
-        return null;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.activity_edit_measurement);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_measurement_edit, container, false);
-    }
+        // Get a viewmodel from the viewmodelproviders
+        viewModel = new ViewModelProvider(this).get(EntitiesViewModel.class);
+        // Basis directory definitie
+        String baseDir = getBaseContext().getExternalFilesDir(null).getAbsolutePath();
+//        String baseDir = getBaseContext().getFilesDir().getAbsolutePath();
+        // Initialize viewmodel mt basis directory (data wordt opgehaald in viewmodel)
+        ReturnInfo viewModelStatus = viewModel.initializeViewModel(baseDir);
+        if (viewModelStatus.getReturnCode() == 0) {
+            // Files gelezen
+        } else if (viewModelStatus.getReturnCode() == 100) {
+            Toast.makeText(EditMeasurement.this,
+                    viewModelStatus.getReturnMessage(),
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(EditMeasurement.this,
+                    "Ophalen data is mislukt",
+                    Toast.LENGTH_LONG).show();
+        }
 
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        // Intent bekijken
+        Intent editIntent = getIntent();
+        action = editIntent.getStringExtra(StaticData.EXTRA_INTENT_KEY_ACTION);
+        entityType = editIntent.getStringExtra(SpecificData.ENTITY_TYPE);
+        locationSelection = editIntent.getStringExtra(SpecificData.LOCATION_SPIN);
+        meterSelection = editIntent.getStringExtra(SpecificData.METER_SPIN);
+
         // Schermvelden Definities
-        locationValueView = view.findViewById(R.id.locationNameMsrmnt);
-        meterValueView = view.findViewById(R.id.meterNameMsrmnt);
-        dateView = view.findViewById(R.id.editMsrmntDate);
-        meterstandView = view.findViewById(R.id.editMeterstand);
-        Button saveButton = view.findViewById(R.id.buttonSaveMsrmnt);
-
-        // Via het viewmodel uit de activity kan je over de data beschikken !
-        viewModel = new ViewModelProvider(requireActivity()).get(EntitiesViewModel.class);
-
-        // Wat zijn de argumenten die werden meegegeven
-        locationSelection = requireArguments().getString(SpecificData.LOCATION_SPIN);
-        meterSelection = requireArguments().getString(SpecificData.METER_SPIN);
-        String action = requireArguments().getString(StaticData.EXTRA_INTENT_KEY_ACTION);
+        instruction = findViewById(R.id.instructionNewMsrmnt);
+        locationValueView = findViewById(R.id.locationNameMsrmnt);
+        meterValueView = findViewById(R.id.meterNameMsrmnt);
+        dateView = findViewById(R.id.editMsrmntDate);
+        meterstandView = findViewById(R.id.editMeterstand);
+        Button saveButton = findViewById(R.id.buttonSaveMsrmnt);
 
         // Schermvelden invullen
         locationValueView.setText(locationSelection);
         meterValueView.setText(meterSelection);
         saveButton.setText(SpecificData.BUTTON_TOEVOEGEN);
 
-        // Update specific
-        if (action.equals(StaticData.ACTION_UPDATE)){
-            iDToUpdate = requireArguments().getInt(StaticData.EXTRA_INTENT_KEY_ID);
+        if (action.equals(StaticData.ACTION_NEW)) {
+            setTitle(SpecificData.TITLE_NEW_ACTIVITY_T3);
+            instruction.setText(StaticData.INSTRUCTION_ACTION_NEW);
+        } else {
+            setTitle(SpecificData.TITLE_UPDATE_ACTIVITY_T3);
+            instruction.setText(StaticData.INSTRUCTION_ACTION_UPDATE);
+            // Index uit intent halen om te weten welk element moet aangepast worden
+            iDToUpdate = editIntent.getIntExtra(StaticData.EXTRA_INTENT_KEY_ID,
+                    StaticData.ITEM_NOT_FOUND);
             // Bepaal geselecteerd item obv meegegeven ID
             msrmntToUpdate = (Measurement) viewModel.getMsrmntById(new IDNumber(iDToUpdate));
+            // Locatie en meter
+            Location locMsrmntToUpd = viewModel.getLocationById(msrmntToUpdate.getMeterLocationId());
+            Meter meterMsrmntToUpd = viewModel.getMeterById(msrmntToUpdate.getMeterId());
             // Vul Scherm in met gegevens
+            locationValueView.setText(locMsrmntToUpd.getEntityName());
+            meterValueView.setText(meterMsrmntToUpd.getEntityName());
             meterstandView.setText(String.valueOf(msrmntToUpdate.getMeasurementValue()));
             dateView.setText(msrmntToUpdate.getMeasurementDate().getFormatDate());
             saveButton.setText(SpecificData.BUTTON_AANPASSEN);
@@ -134,7 +148,7 @@ public class MeasurementEditFragment extends Fragment implements NewDatePickerIn
                 }
                 viewModel.storeMeasurements();
                 // Ga terug nr Main
-                Intent replyIntent = new Intent(getContext(), MainActivity.class);
+                Intent replyIntent = new Intent(EditMeasurement.this, MainActivity.class);
                 replyIntent.putExtra(SpecificData.ENTITY_TYPE, SpecificData.ENTITY_TYPE_3);
                 startActivity(replyIntent);
             }
@@ -148,7 +162,7 @@ public class MeasurementEditFragment extends Fragment implements NewDatePickerIn
         Bundle bundle = new Bundle();
         bundle.putString("Caller", "MeasurementEditFragment");
         newFragment.setArguments(bundle);
-        FragmentManager dateFragmentMgr = getParentFragmentManager();
+        FragmentManager dateFragmentMgr = getSupportFragmentManager();
         newFragment.show(dateFragmentMgr, "datePicker");
 
     }
@@ -164,7 +178,6 @@ public class MeasurementEditFragment extends Fragment implements NewDatePickerIn
 
         dateView.setText(dateMessage);
 
-        Toast.makeText(getContext(), "Date: " + dateMessage, Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this, "Date: " + dateMessage, Toast.LENGTH_SHORT).show();
     }
 }

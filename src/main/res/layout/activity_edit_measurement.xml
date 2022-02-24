@@ -4,7 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.LocationEditFragment">
+    tools:context=".EditMeasurement">
+
+    <TextView
+        android:id="@+id/instructionNewMsrmnt"
+        android:layout_width="93dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/label_instruction_new_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/labelNameLocationMsrmnt"
@@ -14,7 +24,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/label_location"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/instructionNewMsrmnt" />
 
     <Button
         android:id="@+id/buttonSaveMsrmnt"
@@ -41,10 +51,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:text="@string/label_location"
-        app:layout_constraintStart_toEndOf="@+id/labelNameLocationMsrmnt"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/labelNameLocationMsrmnt"
+        app:layout_constraintStart_toEndOf="@+id/labelNameLocationMsrmnt" />
 
     <TextView
         android:id="@+id/meterNameMsrmnt"
@@ -99,5 +108,6 @@
         android:inputType="numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/labelMeterstand"
         app:layout_constraintStart_toEndOf="@+id/labelMeterstand" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

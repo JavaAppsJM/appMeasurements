@@ -1,10 +1,5 @@
 package be.hvwebsites.metingen;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,13 +11,17 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import be.hvwebsites.libraryandroid4.adapters.NothingSelectedSpinnerAdapter;
 import be.hvwebsites.libraryandroid4.helpers.ListItemHelper;
+import be.hvwebsites.libraryandroid4.repositories.Cookie;
 import be.hvwebsites.libraryandroid4.repositories.CookieRepository;
 import be.hvwebsites.libraryandroid4.returninfo.ReturnInfo;
 import be.hvwebsites.libraryandroid4.statics.StaticData;
@@ -30,8 +29,6 @@ import be.hvwebsites.metingen.adapters.TextItemListAdapter;
 import be.hvwebsites.metingen.constants.SpecificData;
 import be.hvwebsites.metingen.entities.Location;
 import be.hvwebsites.metingen.entities.Meter;
-import be.hvwebsites.metingen.fragments.LocationEditFragment;
-import be.hvwebsites.metingen.fragments.MeasurementListFragment;
 import be.hvwebsites.metingen.viewmodels.EntitiesViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,21 +42,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-/*
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent mainIntent = new Intent(MainActivity.this, EditEntity.class);
-                mainIntent.putExtra(SpecificData.ENTITY_TYPE, SpecificData.ENTITY_TYPE_3);
-                mainIntent.putExtra(StaticData.EXTRA_INTENT_KEY_ACTION, StaticData.ACTION_NEW);
-                mainIntent.putExtra(SpecificData.LOCATION_SPIN, locationSelection);
-                mainIntent.putExtra(SpecificData.METER_SPIN, meterSelection);
-                startActivity(mainIntent);
-            }
-        });
-
-*/
         // Data ophalen
         // Get a viewmodel from the viewmodelproviders
         viewModel = new ViewModelProvider(this).get(EntitiesViewModel.class);
@@ -167,6 +149,25 @@ public class MainActivity extends AppCompatActivity {
                 }
                 meterSpinAdapter.clear();
                 meterSpinAdapter.addAll(meterNameList);
+
+                // locationselection in Cookie updaten
+                if (cookieRepository.bestaatCookie(SpecificData.LOCATION_SPIN) != StaticData.ITEM_NOT_FOUND){
+                    cookieRepository.deleteCookie(SpecificData.LOCATION_SPIN);
+                }
+                Cookie locCookie = new Cookie();
+                locCookie.setCookieLabel(SpecificData.LOCATION_SPIN);
+                locCookie.setCookieValue(locationSelection);
+                cookieRepository.addCookie(locCookie);
+
+                // TODO: meting lijst leeg maken of recyclerview clearen
+                itemList.clear();
+                adapter.setEntityType(SpecificData.ENTITY_TYPE_3);
+                adapter.setItemList(itemList);
+                if (itemList == null){
+                    Toast.makeText(MainActivity.this,
+                            SpecificData.NO_MEASUREMENTS_YET,
+                            Toast.LENGTH_LONG).show();
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -199,6 +200,14 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.LENGTH_LONG).show();
                             }
                         }
+                        // meterselection in Cookie updaten
+                        if (cookieRepository.bestaatCookie(SpecificData.METER_SPIN) != StaticData.ITEM_NOT_FOUND){
+                            cookieRepository.deleteCookie(SpecificData.METER_SPIN);
+                        }
+                        Cookie locCookie = new Cookie();
+                        locCookie.setCookieLabel(SpecificData.METER_SPIN);
+                        locCookie.setCookieValue(meterSelection);
+                        cookieRepository.addCookie(locCookie);
                     }
                 }
             }
@@ -215,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 if ((!locationSelection.equals(StaticData.EMPTY_STRING))
                         && (!meterSelection.equals(StaticData.EMPTY_STRING))){
                     // locatie & meter zijn gekend, er mag een nieuwe meting geregistreerd worden
-                    Intent mIntent = new Intent(MainActivity.this, EditEntity.class);
+                    Intent mIntent = new Intent(MainActivity.this, EditMeasurement.class);
                     mIntent.putExtra(SpecificData.ENTITY_TYPE, SpecificData.ENTITY_TYPE_3);
                     mIntent.putExtra(StaticData.EXTRA_INTENT_KEY_ACTION, StaticData.ACTION_NEW);
                     mIntent.putExtra(SpecificData.LOCATION_SPIN, locationSelection);
@@ -228,22 +237,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-/*
-        // Fragment bundle samenstellen om mee te geven aan fragment
-        Bundle fragmentBundle = new Bundle();
-        fragmentBundle.putString(SpecificData.LOCATION_SPIN, locationSelection);
-        fragmentBundle.putString(SpecificData.METER_SPIN, meterSelection);
-
-        // Creeer fragment_measurements
-        if (savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.frag_measurements, MeasurementListFragment.class, fragmentBundle)
-                    .commit();
-        }
-
-*/
     }
 
     @Override
@@ -285,5 +278,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return StaticData.ITEM_NOT_FOUND;
     }
-
 }

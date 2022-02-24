@@ -37,7 +37,8 @@ public class Location {
     }
 
     public void setEntityName(String entityName) {
-        this.entityName = entityName;
+        this.entityName = entityName.substring(0,1).toUpperCase().concat(entityName.substring(1));
+        boolean debug = true;
     }
 
     public void convertFromFileLine(String fileLine) {

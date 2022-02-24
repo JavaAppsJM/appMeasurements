@@ -49,6 +49,9 @@ public class ManageEntities extends AppCompatActivity {
         // Over welke entity gaat het --> intent nakijken
         Intent mgmtIntent = getIntent();
         entityType = mgmtIntent.getStringExtra(SpecificData.ENTITY_TYPE);
+        if (entityType == null){
+            entityType = SpecificData.ENTITY_TYPE_1; //Default entity type indien de back arrows gebruikt worden
+        }
 
         // FloatingActionButton
         FloatingActionButton fab = findViewById(R.id.fab_manage_entities);
@@ -88,8 +91,8 @@ public class ManageEntities extends AppCompatActivity {
         final TextItemListAdapter adapter = new TextItemListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         itemList.clear();
+
         // Entity specifics
         TextView labelColHead1 = findViewById(R.id.listHeader);
         // TODO: hier krijg ik soms een nullpointerexception ?
@@ -103,7 +106,8 @@ public class ManageEntities extends AppCompatActivity {
                 setTitle(SpecificData.TITLE_LIST_ACTIVITY_T2);
                 // Column head invullen
                 labelColHead1.setText(SpecificData.HEAD_LIST_ACTIVITY_T2);
-                // Als het over meters gaat, dan moet eerst de location gekozen worden in de spinner
+                // Als het over meters gaat, dan moet eerst de location gekozen worden
+                // in de spinner indien ze niet is meegegeven in de intent
                 // Spinner activeren
                 locationForMeterSpinner.setVisibility(View.VISIBLE);
                 ArrayAdapter<String> locSpinAdapter = new ArrayAdapter(this,
@@ -118,6 +122,12 @@ public class ManageEntities extends AppCompatActivity {
                     locationForMeterSpinner.setAdapter(locSpinAdapter);
                 }
                 locSpinAdapter.addAll(viewModel.getLocationNameList());
+                // is location meegegeven via intent ?
+                if (mgmtIntent.hasExtra(SpecificData.LOCATION_SPIN)){
+                    locationSelection = mgmtIntent.getStringExtra(SpecificData.LOCATION_SPIN);
+                    locationForMeterSpinner
+                            .setSelection(viewModel.getLocationIndexByName(locationSelection));
+                }
                 // selection listener activeren
                 locationForMeterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -136,7 +146,6 @@ public class ManageEntities extends AppCompatActivity {
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
                 });
-//                lineList.addAll(viewModel.getMeterNameList());
                 break;
         }
 

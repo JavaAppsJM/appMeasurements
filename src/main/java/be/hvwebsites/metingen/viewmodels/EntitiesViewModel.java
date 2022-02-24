@@ -172,9 +172,9 @@ public class EntitiesViewModel extends AndroidViewModel {
         return meters;
     }
 
-    public Meter getMeterById(IDNumber locationId){
+    public Meter getMeterById(IDNumber meterID){
         for (int j = 0; j < meterList.size(); j++) {
-            if (meterList.get(j).getEntityId().getId() == locationId.getId()){
+            if (meterList.get(j).getEntityId().getId() == meterID.getId()){
                 return meterList.get(j);
             }
         }
@@ -182,10 +182,12 @@ public class EntitiesViewModel extends AndroidViewModel {
     }
 
     public Meter getMeterByNameForLocation(String inName, Location inLoc){
-        for (int j = 0; j < meterList.size(); j++) {
-            if ((meterList.get(j).getEntityName().equals(inName)) &&
-                    (meterList.get(j).getMeterLocationId().getId() == inLoc.getEntityId().getId())) {
-                return meterList.get(j);
+        if (inLoc != null){
+            for (int j = 0; j < meterList.size(); j++) {
+                if ((meterList.get(j).getEntityName().equals(inName)) &&
+                        (meterList.get(j).getMeterLocationId().getId() == inLoc.getEntityId().getId())) {
+                    return meterList.get(j);
+                }
             }
         }
         return null;
@@ -203,10 +205,12 @@ public class EntitiesViewModel extends AndroidViewModel {
     public List<ListItemHelper> getMeasurementsforMeter(Location inLoc, Meter inMeter){
         // Eerst gaan we de metinglijst voor de opgegeven locatie, meter bepalen
         List<Measurement> mList = new ArrayList<>();
-        for (int j = 0; j < measurementList.size(); j++) {
-            if ((measurementList.get(j).getMeterLocationId().getId() == inLoc.getEntityId().getId() ) &&
-                    (measurementList.get(j).getMeterId().getId() == inMeter.getEntityId().getId())) {
-                mList.add(measurementList.get(j));
+        if ((inLoc != null) && (inMeter != null)){
+            for (int j = 0; j < measurementList.size(); j++) {
+                if ((measurementList.get(j).getMeterLocationId().getId() == inLoc.getEntityId().getId() ) &&
+                        (measurementList.get(j).getMeterId().getId() == inMeter.getEntityId().getId())) {
+                    mList.add(measurementList.get(j));
+                }
             }
         }
         // Display list bepalen voor geselecteerde measurements
@@ -228,18 +232,18 @@ public class EntitiesViewModel extends AndroidViewModel {
         return mDisplayList;
     }
 
-    public Measurement getMsrmntById(IDNumber locationId){
+    public Measurement getMsrmntById(IDNumber msrmntID){
         for (int j = 0; j < measurementList.size(); j++) {
-            if (locationList.get(j).getEntityId().getId() == locationId.getId()){
+            if (measurementList.get(j).getEntityId().getId() == msrmntID.getId()){
                 return measurementList.get(j);
             }
         }
         return null;
     }
 
-    public int getMsrmntIndexById(IDNumber locationId){
+    public int getMsrmntIndexById(IDNumber msrmntID){
         for (int j = 0; j < measurementList.size(); j++) {
-            if (locationList.get(j).getEntityId().getId() == locationId.getId()){
+            if (measurementList.get(j).getEntityId().getId() == msrmntID.getId()){
                 return j;
             }
         }
@@ -362,8 +366,30 @@ public class EntitiesViewModel extends AndroidViewModel {
     public ReturnInfo storeMeasurements(){
         // Bewaart de measurementlist
         ReturnInfo returnInfo = new ReturnInfo(0);
+
+        // Measurements omgekeerd chronologisch sorteren
+        sortMeasurements();
         repository.storeData(measurementFile, convertMsrmntListinDataList(measurementList));
         return returnInfo;
+    }
+
+    private void sortMeasurements(){
+        // Measurements worden omgekeerd chronologisch gesorteerd
+        Measurement tempMsrmnt = new Measurement();
+        int currentDate;
+        int previousDate;
+
+        for (int i = measurementList.size() ; i > 0; i--) {
+            for (int j = 1; j < i ; j++) {
+                currentDate = measurementList.get(j).getMeasurementDate().getIntDate();
+                previousDate = measurementList.get(j-1).getMeasurementDate().getIntDate();
+                if (currentDate > previousDate){
+                    tempMsrmnt.setMeasurement(measurementList.get(j));
+                    measurementList.get(j).setMeasurement(measurementList.get(j-1));
+                    measurementList.get(j-1).setMeasurement(tempMsrmnt);
+                }
+            }
+        }
     }
 
     private List<String> convertMsrmntListinDataList(List<Measurement> inList){

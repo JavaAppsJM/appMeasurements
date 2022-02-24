@@ -139,7 +139,7 @@ public class MeterEditFragment extends Fragment {
         }else {
             // new
             // De locatie vd meter
-            locationSelection = requireArguments().getString(StaticData.EXTRA_INTENT_KEY_SELECTION);
+            locationSelection = requireArguments().getString(SpecificData.LOCATION_SPIN);
         }
         TextView locationMeter = view.findViewById(R.id.locationMeter);
         locationMeter.setText(locationSelection);
@@ -200,6 +200,7 @@ public class MeterEditFragment extends Fragment {
                 // Terug gaan nr lijst
                 Intent replyIntent = new Intent(getContext(), ManageEntities.class);
                 replyIntent.putExtra(SpecificData.ENTITY_TYPE, SpecificData.ENTITY_TYPE_2);
+                replyIntent.putExtra(SpecificData.LOCATION_SPIN, locationSelection);
                 startActivity(replyIntent);
             }
         });

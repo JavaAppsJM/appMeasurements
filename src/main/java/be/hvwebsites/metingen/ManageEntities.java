@@ -24,6 +24,7 @@ import java.util.List;
 import be.hvwebsites.libraryandroid4.adapters.NothingSelectedSpinnerAdapter;
 import be.hvwebsites.libraryandroid4.helpers.IDNumber;
 import be.hvwebsites.libraryandroid4.helpers.ListItemHelper;
+import be.hvwebsites.libraryandroid4.repositories.CookieRepository;
 import be.hvwebsites.libraryandroid4.returninfo.ReturnInfo;
 import be.hvwebsites.libraryandroid4.statics.StaticData;
 import be.hvwebsites.metingen.adapters.TextItemListAdapter;
@@ -45,13 +46,6 @@ public class ManageEntities extends AppCompatActivity {
         // Spinner deactiveren, wordt terug geactiveerd voor meter
         Spinner locationForMeterSpinner = (Spinner) findViewById(R.id.spinnerForMeter);
         locationForMeterSpinner.setVisibility(View.INVISIBLE);
-
-        // Over welke entity gaat het --> intent nakijken
-        Intent mgmtIntent = getIntent();
-        entityType = mgmtIntent.getStringExtra(SpecificData.ENTITY_TYPE);
-        if (entityType == null){
-            entityType = SpecificData.ENTITY_TYPE_1; //Default entity type indien de back arrows gebruikt worden
-        }
 
         // FloatingActionButton
         FloatingActionButton fab = findViewById(R.id.fab_manage_entities);
@@ -84,6 +78,16 @@ public class ManageEntities extends AppCompatActivity {
             Toast.makeText(ManageEntities.this,
                     "Ophalen data is mislukt",
                     Toast.LENGTH_LONG).show();
+        }
+
+        CookieRepository cookieRepository = new CookieRepository(baseDir);
+        // Over welke entity gaat het --> intent nakijken
+        Intent mgmtIntent = getIntent();
+        entityType = mgmtIntent.getStringExtra(SpecificData.ENTITY_TYPE);
+        if (entityType == null){
+            //entityType = SpecificData.ENTITY_TYPE_1; //Default entity type indien de back arrows gebruikt worden
+            // Beter is van cookie op te halen
+            entityType = cookieRepository.getCookieValueFromLabel(SpecificData.ENTITY_TYPE);
         }
 
         // Recyclerview definieren
@@ -127,6 +131,11 @@ public class ManageEntities extends AppCompatActivity {
                     locationSelection = mgmtIntent.getStringExtra(SpecificData.LOCATION_SPIN);
                     locationForMeterSpinner
                             .setSelection(viewModel.getLocationIndexByName(locationSelection));
+                }else {
+                    // is er een cookie vr location
+                    locationSelection = cookieRepository.getCookieValueFromLabel(SpecificData.LOC_MET_SPIN);
+                    locationForMeterSpinner
+                            .setSelection(viewModel.getLocationIndexByName(locationSelection));
                 }
                 // selection listener activeren
                 locationForMeterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -164,9 +173,11 @@ public class ManageEntities extends AppCompatActivity {
                         Toast.makeText(ManageEntities.this,
                                 "Deleting item ... ",
                                 Toast.LENGTH_LONG).show();
-                        int position = viewHolder.getAdapterPosition();
                         // Bepalen entity IDNumber to be deleted
+                        int position = viewHolder.getAdapterPosition();
                         IDNumber idNumberToBeDeleted = itemList.get(position).getItemID();
+                        // Leegmaken itemlist
+                        itemList.clear();
                         // Delete vlgns entity type
                         switch (entityType){
                             case SpecificData.ENTITY_TYPE_1:

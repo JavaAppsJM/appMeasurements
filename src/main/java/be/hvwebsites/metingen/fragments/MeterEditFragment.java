@@ -31,6 +31,11 @@ public class MeterEditFragment extends Fragment {
     private EntitiesViewModel viewModel;
     private int iDToUpdate = StaticData.ITEM_NOT_FOUND;
     private String locationSelection = "";
+    private RadioButton typeDag;
+    private RadioButton typeNacht;
+    private RadioButton typeExNacht;
+    private TextView typeMeterLabel;
+    private View tariefGroup;
 
     // Toegevoegd vanuit android tutorial
     public MeterEditFragment(){
@@ -62,7 +67,8 @@ public class MeterEditFragment extends Fragment {
         // Meter Name
         TextView meterNameLabel = view.findViewById(R.id.labelNameMeter);
         meterNameLabel.setText(SpecificData.LABEL_METERNAME_T2);
-        // NutMeter
+
+        /** NutMeter */
         TextView nutMeterLabel = view.findViewById(R.id.labelNut);
         nutMeterLabel.setText(SpecificData.LABEL_NUT_T2);
         // Radiobuttons nut meter
@@ -82,11 +88,11 @@ public class MeterEditFragment extends Fragment {
                 onRadioButtonNutClicked(v);
             }
         });
-        // TypeMeter
-        TextView typeMeterLabel = view.findViewById(R.id.labelTypeMeter);
-        typeMeterLabel.setText(SpecificData.LABEL_TYPE_T2);
+
+        /** TypeMeter */
         // Radiobuttons type meter
-        RadioButton typeDag = view.findViewById(R.id.radioButton3);
+        typeDag = view.findViewById(R.id.radioButton3);
+        typeDag.setVisibility(View.GONE);
         typeDag.setText(SpecificData.RADIOBUTTON_DAY_T2);
         typeDag.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +100,8 @@ public class MeterEditFragment extends Fragment {
                 onRadioButtonTypeClicked(v);
             }
         });
-        RadioButton typeNacht = view.findViewById(R.id.radioButton4);
+        typeNacht = view.findViewById(R.id.radioButton4);
+        typeNacht.setVisibility(View.GONE);
         typeNacht.setText(SpecificData.RADIOBUTTON_NIGHT_T2);
         typeNacht.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +109,8 @@ public class MeterEditFragment extends Fragment {
                 onRadioButtonTypeClicked(v);
             }
         });
-        RadioButton typeExNacht = view.findViewById(R.id.radioButton5);
+        typeExNacht = view.findViewById(R.id.radioButton5);
+        typeExNacht.setVisibility(View.GONE);
         typeExNacht.setText(SpecificData.RADIOBUTTON_XNIGHT_T2);
         typeExNacht.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +118,13 @@ public class MeterEditFragment extends Fragment {
                 onRadioButtonTypeClicked(v);
             }
         });
-        // button
+        typeMeterLabel = view.findViewById(R.id.labelTypeMeter);
+        typeMeterLabel.setText(SpecificData.LABEL_TYPE_T2);
+        typeMeterLabel.setVisibility(View.GONE);
+        tariefGroup = view.findViewById(R.id.tariefGroup);
+        tariefGroup.setVisibility(View.GONE);
+
+        // Savebutton
         Button saveButton = view.findViewById(R.id.buttonSaveMeter);
         saveButton.setText(SpecificData.BUTTON_TOEVOEGEN);
 
@@ -132,6 +146,26 @@ public class MeterEditFragment extends Fragment {
                 nutWater.setChecked(true);
             }else {
                 nutElectricity.setChecked(true);
+                // type meter zichtbaar maken
+                typeDag.setVisibility(View.VISIBLE);
+                typeNacht.setVisibility(View.VISIBLE);
+                typeExNacht.setVisibility(View.VISIBLE);
+                typeMeterLabel.setVisibility(View.VISIBLE);
+                tariefGroup.setVisibility(View.VISIBLE);
+                // Bepalen welk type meter het is
+                switch (meterToUpdate.getElectricityPriceType()){
+                    case DAY:
+                        typeDag.setChecked(true);
+                        break;
+                    case NIGHT:
+                        typeNacht.setChecked(true);
+                        break;
+                    case EXCLUSIVE_NIGHT:
+                        typeExNacht.setChecked(true);
+                        break;
+                    case OTHER:
+                        break;
+                }
             }
             saveButton.setText(SpecificData.BUTTON_AANPASSEN);
             // De locatie vd meter
@@ -213,13 +247,29 @@ public class MeterEditFragment extends Fragment {
         // Check which radio button was clicked
         switch(view.getId()) {
             case R.id.radioButton1:
-                if (checked)
-                    // Water is gekozen
-                    break;
+                // Water is gekozen
+                if (checked){
+                    typeDag.setVisibility(View.GONE);
+                    typeNacht.setVisibility(View.GONE);
+                    typeExNacht.setVisibility(View.GONE);
+                    typeMeterLabel.setVisibility(View.GONE);
+                    tariefGroup.setVisibility(View.GONE);
+                    boolean debug = false;
+                }
+                break;
             case R.id.radioButton2:
-                if (checked)
-                    // Elektriciteit is gekozen
-                    break;
+                // Elektriciteit is gekozen
+                if (checked){
+                    // Elektriciteit is checked
+                    // Radiobuttons type meter
+                    typeDag.setVisibility(View.VISIBLE);
+                    typeNacht.setVisibility(View.VISIBLE);
+                    typeExNacht.setVisibility(View.VISIBLE);
+                    typeMeterLabel.setVisibility(View.VISIBLE);
+                    tariefGroup.setVisibility(View.VISIBLE);
+                    boolean debug = true;
+                }
+                break;
         }
     }
 

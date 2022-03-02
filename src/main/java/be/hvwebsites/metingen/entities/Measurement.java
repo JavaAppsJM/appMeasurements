@@ -149,7 +149,7 @@ public class Measurement {
         }
 
         // Samenstellen intpart
-        if (intPart.length() < (stringLength-decPart.length())){
+        if (intPart.length() <= (stringLength-decPart.length())){
             // aanvullen int part indien nodig
             int aantalSpaceToFill = stringLength - decPart.length() - intPart.length();
             String spaceToFill = outString.substring(0, aantalSpaceToFill);

@@ -38,6 +38,7 @@ public class SpecificData {
 
     public static final String LOCATION_SPIN = "locspin";
     public static final String METER_SPIN = "metspin";
+    public static final String LOC_MET_SPIN = "meterlocspin";
 
     public static final int PRODUCT_DISPLAY_SMALL = 1;
     public static final int PRODUCT_DISPLAY_LARGE = 2;

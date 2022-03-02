@@ -81,52 +81,67 @@
             android:text="@string/radiobutton_text" />
     </RadioGroup>
 
-    <TextView
-        android:id="@+id/labelTypeMeter"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/type_meter_label"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nutgroup" />
-
-    <RadioGroup
-        android:id="@+id/typeMeterGroup"
-        android:layout_width="280dp"
-        android:layout_height="107dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@+id/labelTypeMeter"
         app:layout_constraintTop_toBottomOf="@+id/nutgroup">
 
-        <RadioButton
-            android:id="@+id/radioButton3"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/tariefGroup"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/radiobutton_text" />
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent">
 
-        <RadioButton
-            android:id="@+id/radioButton4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/radiobutton_text" />
+            <TextView
+                android:id="@+id/labelTypeMeter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/type_meter_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nutgroup" />
 
-        <RadioButton
-            android:id="@+id/radioButton5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/radiobutton_text" />
-    </RadioGroup>
+            <RadioGroup
+                android:id="@+id/typeMeterGroup"
+                android:layout_width="280dp"
+                android:layout_height="107dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toEndOf="@+id/labelTypeMeter"
+                app:layout_constraintTop_toBottomOf="@+id/nutgroup">
 
-    <Button
-        android:id="@+id/buttonSaveMeter"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/save_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typeMeterGroup" />
+                <RadioButton
+                    android:id="@+id/radioButton3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radiobutton_text" />
+
+                <RadioButton
+                    android:id="@+id/radioButton4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radiobutton_text" />
+
+                <RadioButton
+                    android:id="@+id/radioButton5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radiobutton_text" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonSaveMeter"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="0dp"
+            android:text="@string/save_button"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

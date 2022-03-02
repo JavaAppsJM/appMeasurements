@@ -9,9 +9,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import be.hvwebsites.libraryandroid4.helpers.IDNumber;
+import be.hvwebsites.libraryandroid4.repositories.Cookie;
+import be.hvwebsites.libraryandroid4.repositories.CookieRepository;
 import be.hvwebsites.libraryandroid4.returninfo.ReturnInfo;
 import be.hvwebsites.libraryandroid4.statics.StaticData;
 import be.hvwebsites.metingen.constants.SpecificData;
+import be.hvwebsites.metingen.entities.Location;
+import be.hvwebsites.metingen.entities.Meter;
 import be.hvwebsites.metingen.fragments.LocationEditFragment;
 import be.hvwebsites.metingen.fragments.MeterEditFragment;
 import be.hvwebsites.metingen.viewmodels.EntitiesViewModel;
@@ -61,6 +66,16 @@ public class EditEntity extends AppCompatActivity {
         locationSelection = editIntent.getStringExtra(SpecificData.LOCATION_SPIN);
         meterSelection = editIntent.getStringExtra(SpecificData.METER_SPIN);
 
+        // entitytype in cookie steken, om back arrows te ondersteunen
+        CookieRepository cookieRepository = new CookieRepository(baseDir);
+        if (cookieRepository.bestaatCookie(SpecificData.ENTITY_TYPE) != StaticData.ITEM_NOT_FOUND){
+            cookieRepository.deleteCookie(SpecificData.ENTITY_TYPE);
+        }
+        Cookie locCookie = new Cookie();
+        locCookie.setCookieLabel(SpecificData.ENTITY_TYPE);
+        locCookie.setCookieValue(entityType);
+        cookieRepository.addCookie(locCookie);
+
         // Instruction invullen
         instruction = (TextView) findViewById(R.id.instructionNewItem);
 
@@ -104,6 +119,17 @@ public class EditEntity extends AppCompatActivity {
                             StaticData.ITEM_NOT_FOUND);
                     // in bundle steken om mee te geven aan fragment
                     fragmentBundle.putInt(StaticData.EXTRA_INTENT_KEY_ID, idToUpdate);
+                    // Bepaal geselecteerde meter obv meegegeven Id
+                    Meter meterToUpdate = viewModel.getMeterById(new IDNumber(idToUpdate));
+                    // location in cookie onthouden vr back arrows
+                    Location locMeter = viewModel.getLocationById(meterToUpdate.getMeterLocationId());
+                    if (cookieRepository.bestaatCookie(SpecificData.LOC_MET_SPIN) != StaticData.ITEM_NOT_FOUND){
+                        cookieRepository.deleteCookie(SpecificData.LOC_MET_SPIN);
+                    }
+                    Cookie locMetCookie = new Cookie();
+                    locMetCookie.setCookieLabel(SpecificData.LOC_MET_SPIN);
+                    locMetCookie.setCookieValue(locMeter.getEntityName());
+                    cookieRepository.addCookie(locMetCookie);
                 }
                 // Creeer fragment_meter
                 if (savedInstanceState == null) {
